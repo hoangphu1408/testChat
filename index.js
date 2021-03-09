@@ -6,12 +6,16 @@ const expressLayouts = require("express-ejs-layouts");
 
 const accounts = [
   {
-    username: "abc",
-    role: "x",
+    id: "aDAsad51062281",
+    username: "Phu",
   },
   {
+    id: "sxCBswe15615216sS",
+    username: "abc",
+  },
+  {
+    id: "asdCW62188021qbbG",
     username: "xyz",
-    role: "x",
   },
 ];
 
@@ -28,17 +32,30 @@ const io = socket(server);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/login", (req, res) => {
+app.get("/", (req, res) => {
   res.render("login", {
     layout: "index",
   });
 });
 
-app.post("/login", (req, res) => {
-  const isAccount = accounts.find((x) => x.username === req.body.username);
+app.post("/", (req, res) => {
+  const username = req.body.username;
+  const isAccount = accounts.find((x) => x.username === username);
   if (isAccount) {
-    res.redirect("/chat");
+    res.redirect("/chat?username=" + username + "&id=" + isAccount.id);
   } else res.send("failed");
+});
+
+app.get("/chat", (req, res) => {
+  const { username, id } = req.query;
+  const user = {
+    id: id,
+    username: username,
+  };
+  res.render("chat", {
+    layout: "index",
+    user: user,
+  });
 });
 
 // app.get("/", function (req, res) {
@@ -46,8 +63,10 @@ app.post("/login", (req, res) => {
 // });
 
 io.on("connection", function (socket) {
-  console.log("Welcome to server chat");
-
+  socket.on("online", function (data) {
+    console.log(data);
+    io.sockets.emit("online", data);
+  });
   socket.on("send", function (data) {
     console.log(data);
     io.sockets.emit("send", data);

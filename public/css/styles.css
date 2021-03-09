@@ -12,13 +12,13 @@
 #content .myMess {
     border: 1px solid grey;
     padding: 5px 10px;
-    text-align: left;
+    text-align: right;
 }
 
 #content .mfMess{
     border: 1px solid grey;
     padding: 5px 10px;
-    text-align: right;
+    text-align: left;
 }
 
 
